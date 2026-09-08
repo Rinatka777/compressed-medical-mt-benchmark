@@ -1,0 +1,42 @@
+# Top-level dependencies for the Compressed Medical MT Benchmark (en->fi).
+# Human-readable source. The frozen, fully-pinned lock is requirements.txt.
+#
+# Install:  pip install -r requirements.txt
+# Regenerate lock:  pip install -r requirements.in && pip freeze > requirements.txt
+#
+# Python 3.12 (see SETUP.md for why not 3.11 or 3.13).
+
+# --- Inference / conversion ---
+ctranslate2
+transformers            # pinned to 4.x by unbabel-comet; keeps the "translation" pipeline
+sentencepiece
+sacremoses              # Marian tokenizer needs this
+torch                   # CPU wheel on Mac; install the CUDA wheel on the RTX 4070 box (see SETUP.md)
+
+# --- Data ---
+datasets
+
+# --- Evaluation ---
+sacrebleu               # BLEU, chrF++, paired bootstrap resampling
+unbabel-comet           # COMET; drags numpy<2 + torchmetrics<0.11 + transformers<5
+
+# --- Phase 4: training data cleaning ---
+opusfilter
+
+# --- Phase 4: fine-tuning ---
+accelerate              # required by transformers Seq2SeqTrainer
+
+# --- Service (Phase 5) ---
+fastapi
+uvicorn[standard]
+
+# --- Plotting / tables / misc ---
+pandas
+matplotlib
+pyyaml
+psutil                  # hardware fingerprint (RAM, cores)
+
+# --- Constraint pins forced by the resolver (do not relax without re-checking) ---
+numpy<2                 # unbabel-comet 2.2.7 requires numpy<2.0.0
+py3langid==0.2.2        # opusfilter dep; 0.3.0+ requires numpy>=2 on py>=3.9
+setuptools<81           # torchmetrics 0.10.3 (pinned by comet) imports pkg_resources

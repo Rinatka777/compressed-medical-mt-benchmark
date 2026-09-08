@@ -1,0 +1,25 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Editor / IDE config
+.idea/
+.junie/
+
+# Data and models are large / reproducible from scripts — keep the dirs, not the contents
+/data/raw/*
+/data/processed/*
+/models/hf/*
+/models/ct2/*
+!**/.gitkeep
+
+# Results are the deliverable — keep them in git, ignore only scratch
+/results/scratch/
+
+# HuggingFace / torch caches
+.cache/
+
+# OS
+.DS_Store
