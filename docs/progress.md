@@ -5,8 +5,8 @@ each "Done when" condition is met; note deviations from the brief here with a re
 
 | Phase | Brief "done when" | Status | Notes |
 |------|-------------------|--------|-------|
-| 0 — Smoke test | 10 hand-written sentences translate and look like Finnish | ◻ not started | Toolchain already proven during setup (2 sentences, HF + CT2 int8). Still owe the formal 10-sentence run + `results/phase0_*.json`. |
-| 1 — Data | 3 split files exist; duplicate-removal count recorded | ◻ not started | `src/prepare_data.py`. Source: `Helsinki-NLP/emea` on HF. Dedup **before** split. Test = 2000. |
+| 0 — Smoke test | 10 hand-written sentences translate and look like Finnish | ✅ done | `src/phase0_smoke.py` → `results/phase0_smoke.json`. 10 sentences, 3.16 s on M2 `mps`, HF pipeline. Fluent Finnish; "5 mg" preserved, all four negations kept (`älä`, `ei tule`, `ei saa`), drug names present & inflected (amlodipiinia, ibuprofeeni-, penisilliinille). |
+| 1 — Data | 3 split files exist; duplicate-removal count recorded | ◻ not started | `src/prepare_data.py`. Source: **OPUS EMEA v3 en–fi moses** (HF `Helsinki-NLP/emea` is dead — see deviations). Dedup **before** split. Test = 2000. |
 | 2 — Baseline + sweep | Results table (both models × every precision) + plot | ◻ not started | `convert.py` / `translate.py` / `evaluate.py`. |
 | 3 — Entity checks | Every condition has entity error rates + CIs; checker accuracy documented | ◻ not started | `src/entity_checks.py`. |
 | 4 — Fine-tuning | Full table: 2 models × 2 states × every precision | ◻ not started | `filter_config.yaml` + `finetune.py`. GPU (Windows) only. |
@@ -23,6 +23,7 @@ each "Done when" condition is met; note deviations from the brief here with a re
 | GPU-only precisions "if a GPU is available" | Run `float16`/`bfloat16` on the Windows RTX 4070 only | Dev Mac has no CUDA. |
 | "one consumer GPU" for fine-tuning | RTX 4070, 12 GB. Marian: trivial. NLLB-600M: needs fp16 + grad checkpointing + small batch + grad accumulation. | 12 GB is enough but not generous for 600M. |
 | Repo root `medmt/` | Repo root is the project folder directly (`src/`, `data/`, …) | Cosmetic; the `medmt/` in the brief is just the project name. |
+| Data from `Helsinki-NLP/emea` on HF | Download EMEA v3 en–fi moses files straight from OPUS (`https://object.pouta.csc.fi/OPUS-EMEA/v3/moses/en-fi.txt.zip`, ~34 MB) | The HF dataset is a loading-script dataset (`emea.py`); `datasets` 5.0.1 removed script support entirely and `trust_remote_code` now raises. OPUS is the original source anyway. |
 
 ## Open questions / decisions still to make
 

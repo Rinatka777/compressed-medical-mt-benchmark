@@ -1,0 +1,56 @@
+{
+  "phase": 0,
+  "model": "Helsinki-NLP/opus-mt-en-fi",
+  "seed": 0,
+  "n_sentences": 10,
+  "elapsed_sec": 3.159,
+  "device": "mps",
+  "pairs": [
+    {
+      "en": "Take one tablet twice a day.",
+      "fi": "Ota yksi tabletti kaksi kertaa päivässä."
+    },
+    {
+      "en": "Do not exceed the recommended dose.",
+      "fi": "Älä ylitä suositeltua annosta."
+    },
+    {
+      "en": "This medicine contains 5 mg of amlodipine.",
+      "fi": "Tämä lääke sisältää 5 mg amlodipiinia."
+    },
+    {
+      "en": "Patients should not drink alcohol while taking ibuprofen.",
+      "fi": "Potilaiden ei tule juoda alkoholia ibuprofeenihoidon aikana."
+    },
+    {
+      "en": "The tablet must not be chewed.",
+      "fi": "Tablettia ei saa pureskella."
+    },
+    {
+      "en": "Store below 25 degrees Celsius.",
+      "fi": "Säilytä alle 25 celsiusastetta."
+    },
+    {
+      "en": "Tell your doctor if you are pregnant or breast-feeding.",
+      "fi": "Kerro lääkärille, jos olet raskaana tai imetät."
+    },
+    {
+      "en": "The most common side effects include nausea and headache.",
+      "fi": "Yleisimpiä sivuvaikutuksia ovat pahoinvointi ja päänsärky."
+    },
+    {
+      "en": "Do not use this medicine if you are allergic to penicillin.",
+      "fi": "Älä käytä tätä lääkettä, jos olet allerginen penisilliinille."
+    },
+    {
+      "en": "Keep this medicine out of the sight and reach of children.",
+      "fi": "Pidä tämä lääke poissa lasten ulottuvilta ja näkyviltä."
+    }
+  ],
+  "env": {
+    "python": "3.12.3",
+    "torch": "2.14.0",
+    "transformers": "4.57.6",
+    "platform": "macOS-26.6.2-arm64-arm-64bit"
+  }
+}
