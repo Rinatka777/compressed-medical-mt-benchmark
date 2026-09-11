@@ -61,6 +61,11 @@ def ensure_raw_data() -> tuple[Path, Path]:
     print(f"extracted -> {SRC_FILE.name}, {TGT_FILE.name}")
     return SRC_FILE, TGT_FILE
 
+def load_pairs() -> list[tuple[str, str]]:
+    """Load all pairs from the EMEA dataset."""
+    with SRC_FILE.open("r", encoding="utf-8") as f_en, TGT_FILE.open("r", encoding="utf-8") as f_fi:
+        pairs = list(zip(f_en, f_fi))
+    return pairs
 
 if __name__ == "__main__":
     en_path, fi_path = ensure_raw_data()
