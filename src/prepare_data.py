@@ -70,6 +70,31 @@ def load_pairs() -> list[tuple[str, str]]:
         pairs = list(zip(en_lines, fi_lines, strict=True))
     return pairs
 
+LENGTH_RATIO_MAX = 3
+
+
+def data_clean() -> list[tuple[str, str]]:
+    """Drop empty pairs and pairs with an implausible en/fi length ratio.
+
+    Length is measured in characters (not words): Finnish is agglutinative,
+    so word counts run structurally skewed vs. English even for correct
+    translations, whereas character counts don't have that bias.
+    """
+    pairs = load_pairs()
+    result = []
+    for en, fi in pairs:
+        if not en or not fi:
+            continue
+        ratio = max(len(en), len(fi)) / min(len(en), len(fi))
+        if ratio > LENGTH_RATIO_MAX:
+            continue
+        result.append((en, fi))
+    return result
+
+
+
+
+
 if __name__ == "__main__":
     en_path, fi_path = ensure_raw_data()
     # TODO Phase 1 pipeline:
