@@ -91,6 +91,19 @@ def data_clean() -> list[tuple[str, str]]:
         result.append((en, fi))
     return result
 
+def dedup() -> list[tuple[str, str]]:
+    """Keep one row per distinct English source sentence (first occurrence wins)."""
+    pairs = data_clean()
+    seen = set()
+    result = []
+    for en, fi in pairs:
+        normalized_en = en.strip().lower()
+        if normalized_en in seen:
+            continue
+        seen.add(normalized_en)
+        result.append((en, fi))
+    return result
+
 
 
 
