@@ -11,6 +11,7 @@ import hashlib
 import urllib.request
 import zipfile
 from pathlib import Path
+import random
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 RAW_DIR = REPO_ROOT / "data" / "raw"
@@ -103,6 +104,21 @@ def dedup() -> list[tuple[str, str]]:
         seen.add(normalized_en)
         result.append((en, fi))
     return result
+
+def data_shuffle() -> list[tuple[str,str]]:
+    pairs = dedup()
+    random.seed(42)
+    random.shuffle(pairs)
+    return pairs
+
+def data_split(test_size=2000, dev_size=1000):
+    pairs = data_shuffle()
+    test = pairs[:test_size]
+    dev = pairs[test_size:test_size + dev_size]
+    train = pairs[test_size + dev_size:]
+    return train, dev, test
+
+
 
 
 
