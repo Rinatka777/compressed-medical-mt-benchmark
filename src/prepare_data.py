@@ -8,6 +8,7 @@ write data/processed/* and results/phase1_prepare.json -- is still to be written
 from __future__ import annotations
 
 import hashlib
+import json
 import urllib.request
 import zipfile
 from pathlib import Path
@@ -15,12 +16,23 @@ import random
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 RAW_DIR = REPO_ROOT / "data" / "raw"
+PROC_DIR = REPO_ROOT/ "data"/ "processed"
 
 # OPUS EMEA v3, Moses format. Line N of .en aligns to line N of .fi.
 EMEA_URL = "https://object.pouta.csc.fi/OPUS-EMEA/v3/moses/en-fi.txt.zip"
 EMEA_ZIP_SHA256 = "f559de4103fa00871498fac6ebd5cc01f3addec31c7120bd2fccf30e266cb87b"
 SRC_FILE = RAW_DIR / "EMEA.en-fi.en"
 TGT_FILE = RAW_DIR / "EMEA.en-fi.fi"
+
+
+PRC_TRAIN_FI = PROC_DIR/"train.fi"
+PRC_DEV_FI = PROC_DIR/"dev.fi"
+PRC_TEST_FI = PROC_DIR/ "test.fi"
+PRC_TRAIN_EN = PROC_DIR/"train.en"
+PRC_DEV_EN = PROC_DIR/"dev.en"
+PRC_TEST_EN = PROC_DIR/ "test.en"
+
+
 
 
 def _sha256(path: Path) -> str:
@@ -119,14 +131,43 @@ def data_split(test_size=2000, dev_size=1000):
     return train, dev, test
 
 
-
+def write_split(pairs: list[tuple[str, str]], en_path: Path, fi_path: Path) -> None:
+    """Write a list of (en, fi) pairs to two line-aligned files, one sentence per line."""
+    en_lines, fi_lines = zip(*pairs)
+    en_path.write_text("\n".join(en_lines) + "\n", encoding="utf-8")
+    fi_path.write_text("\n".join(fi_lines) + "\n", encoding="utf-8")
 
 
 
 
 if __name__ == "__main__":
-    en_path, fi_path = ensure_raw_data()
-    # TODO Phase 1 pipeline:
-    #   load pairs -> drop empty / bad length ratio -> dedup on source
-    #   -> seeded shuffle -> split (test = 2000) -> write data/processed/*
-    #   -> write results/phase1_prepare.json (counts per step, seed, sha256)
+    ensure_raw_data()
+
+    raw_pairs = load_pairs()
+    cleaned_pairs = data_clean()
+    deduped_pairs = dedup()
+    train, dev, test = data_split()
+
+    PROC_DIR.mkdir(parents=True, exist_ok=True)
+    write_split(train, PRC_TRAIN_EN, PRC_TRAIN_FI)
+    write_split(dev, PRC_DEV_EN, PRC_DEV_FI)
+    write_split(test, PRC_TEST_EN, PRC_TEST_FI)
+
+    stats = {
+        "seed": 42,
+        "raw_pairs": len(raw_pairs),
+        "after_clean": len(cleaned_pairs),
+        "after_dedup": len(deduped_pairs),
+        "dropped_by_clean": len(raw_pairs) - len(cleaned_pairs),
+        "dropped_by_dedup": len(cleaned_pairs) - len(deduped_pairs),
+        "train": len(train),
+        "dev": len(dev),
+        "test": len(test),
+        "emea_zip_sha256": EMEA_ZIP_SHA256,
+    }
+    results_dir = REPO_ROOT / "results"
+    results_dir.mkdir(parents=True, exist_ok=True)
+    with (results_dir / "phase1_prepare.json").open("w", encoding="utf-8") as f:
+        json.dump(stats, f, indent=2)
+
+    print(f"wrote {stats}")
