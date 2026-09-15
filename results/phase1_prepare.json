@@ -1,0 +1,12 @@
+{
+  "seed": 42,
+  "raw_pairs": 1083857,
+  "after_clean": 1039638,
+  "after_dedup": 270671,
+  "dropped_by_clean": 44219,
+  "dropped_by_dedup": 768967,
+  "train": 267671,
+  "dev": 1000,
+  "test": 2000,
+  "emea_zip_sha256": "f559de4103fa00871498fac6ebd5cc01f3addec31c7120bd2fccf30e266cb87b"
+}

@@ -6,7 +6,7 @@ each "Done when" condition is met; note deviations from the brief here with a re
 | Phase | Brief "done when" | Status | Notes |
 |------|-------------------|--------|-------|
 | 0 — Smoke test | 10 hand-written sentences translate and look like Finnish | ✅ done | `src/phase0_smoke.py` → `results/phase0_smoke.json`. 10 sentences, 3.16 s on M2 `mps`, HF pipeline. Fluent Finnish; "5 mg" preserved, all four negations kept (`älä`, `ei tule`, `ei saa`), drug names present & inflected (amlodipiinia, ibuprofeeni-, penisilliinille). |
-| 1 — Data | 3 split files exist; duplicate-removal count recorded | ◻ not started | `src/prepare_data.py`. Source: **OPUS EMEA v3 en–fi moses** (HF `Helsinki-NLP/emea` is dead — see deviations). Dedup **before** split. Test = 2000. |
+| 1 — Data | 3 split files exist; duplicate-removal count recorded | ✅ done | `src/prepare_data.py` → `data/processed/{train,dev,test}.{en,fi}` + `results/phase1_prepare.json`. Source: **OPUS EMEA v3 en–fi moses** (HF `Helsinki-NLP/emea` is dead — see deviations). Dedup **before** split. Counts: 1,083,857 raw → 1,039,638 after clean → 270,671 after dedup → train 267,671 / dev 1,000 / test 2,000 (seed 42). |
 | 2 — Baseline + sweep | Results table (both models × every precision) + plot | ◻ not started | `convert.py` / `translate.py` / `evaluate.py`. |
 | 3 — Entity checks | Every condition has entity error rates + CIs; checker accuracy documented | ◻ not started | `src/entity_checks.py`. |
 | 4 — Fine-tuning | Full table: 2 models × 2 states × every precision | ◻ not started | `filter_config.yaml` + `finetune.py`. GPU (Windows) only. |
