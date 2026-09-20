@@ -96,17 +96,17 @@ def convert_one(model_cfg: dict, precision: str, force: bool = False) -> Path:
 
 
 
-
-
-
 def load_manifest() -> dict:
     """Read existing manifest.json, or return an empty structure if absent."""
-    ...
+    if not MANIFEST_PATH.exists():
+        return {"entries": []}
+    with MANIFEST_PATH.open(encoding = "utf-8") as f:
+        return json.load(f)
 
 
 def record_conversion(manifest: dict, model_cfg: dict, precision: str, output_dir: Path) -> None:
     """Add/update one manifest entry (alias, precision, path, timestamp)."""
-    ...
+
 
 
 def save_manifest(manifest: dict) -> None:
