@@ -1,6 +1,7 @@
 """convert.py — CT2 conversion sweep for Phase 2."""
 
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 import os.path
 import ctranslate2
@@ -106,11 +107,25 @@ def load_manifest() -> dict:
 
 def record_conversion(manifest: dict, model_cfg: dict, precision: str, output_dir: Path) -> None:
     """Add/update one manifest entry (alias, precision, path, timestamp)."""
-
-
+    new_entry = {
+        "alias": model_cfg["alias"],
+        "precision": precision,
+        "path": str(output_dir),
+        "hf_name": model_cfg["hf_name"],
+        "revision": model_cfg["revision"],
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "size_bytes": (output_dir / "model.bin").stat().st_size,
+    }
+    for i, entry in enumerate(manifest["entries"]):
+        if entry["alias"] == new_entry["alias"] and entry["precision"] == new_entry["precision"]:
+            manifest["entries"][i] = new_entry
+            return
+    manifest["entries"].append(new_entry)
 
 def save_manifest(manifest: dict) -> None:
-    ...
+    MANIFEST_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with MANIFEST_PATH.open("w", encoding="utf-8") as f:
+        json.dump(manifest, f, ensure_ascii=False, indent=2)
 
 
 def main() -> None:
